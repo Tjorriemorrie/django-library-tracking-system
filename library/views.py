@@ -6,9 +6,11 @@ from rest_framework.decorators import action
 from django.utils import timezone
 from .tasks import send_loan_notification
 
+
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
@@ -37,7 +39,8 @@ class BookViewSet(viewsets.ModelViewSet):
         try:
             loan = Loan.objects.get(book=book, member__id=member_id, is_returned=False)
         except Loan.DoesNotExist:
-            return Response({'error': 'Active loan does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Active loan does not exist.'},
+                            status=status.HTTP_400_BAD_REQUEST)
         loan.is_returned = True
         loan.return_date = timezone.now().date()
         loan.save()
@@ -45,9 +48,11 @@ class BookViewSet(viewsets.ModelViewSet):
         book.save()
         return Response({'status': 'Book returned successfully.'}, status=status.HTTP_200_OK)
 
+
 class MemberViewSet(viewsets.ModelViewSet):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
+
 
 class LoanViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
